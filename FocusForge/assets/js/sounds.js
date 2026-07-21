@@ -119,10 +119,21 @@
 
   const BUILDERS = { rain: buildRain, ocean: buildOcean, fireplace: buildFireplace, cafe: buildCafe, night: buildNight };
 
+  function humanName(name) {
+    const map = { rain: 'Rain', ocean: 'Ocean', fireplace: 'Fireplace', cafe: 'Café', night: 'Night' };
+    return map[name] || name;
+  }
+
+  function updateStatus() {
+    const el = document.getElementById('sound-status');
+    if (!el) return;
+    el.textContent = activeSound ? `Now playing: ${humanName(activeSound)}` : 'No ambient sound';
+  }
+
   function play(name) {
     const audioCtx = getCtx();
     if (audioCtx.state === "suspended") audioCtx.resume();
-    if (activeSound === name) { stop(); return; }
+    if (activeSound === name) { stop(); updateStatus(); return; }
     if (activeSound) stop();
     const builder = BUILDERS[name];
     if (!builder) return;
@@ -131,6 +142,7 @@
     document.querySelectorAll(".sound-btn").forEach(b => {
       b.classList.toggle("is-active", b.dataset.sound === name);
     });
+    updateStatus();
   }
 
   function setVolume(v) {

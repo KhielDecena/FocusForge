@@ -174,6 +174,16 @@ button, input, select, textarea {
   color: var(--text);
   border-radius: var(--radius-sm);
   width: 40px; height: 40px;
+}
+
+/* Ambient sound controls */
+.sound-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 12px; }
+.sound-btn { background: transparent; color: var(--text-dim); border: 1px solid var(--border); padding: 8px 10px; border-radius: 10px; cursor: pointer; font-weight: 700; }
+.sound-btn:hover { color: var(--text); border-color: rgba(255,255,255,0.06); transform: translateY(-2px); }
+.sound-btn.is-active { color: var(--accent); border-color: var(--accent); background: var(--accent-dim); }
+.sound-status-wrap { margin-top: 10px; }
+.sound-status { color: var(--text-dim); font-size: 0.9rem; padding: 6px 10px; border-radius: 8px; background: rgba(255,255,255,0.02); border: 1px solid transparent; }
+.sound-status strong { color: var(--text); margin-left: 6px; }
   font-size: 1.1rem;
   cursor: pointer;
 }
