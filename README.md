@@ -63,6 +63,29 @@ http://localhost:8000/FocusForge/
 
 The project is configured to publish the [FocusForge](FocusForge) folder to GitHub Pages using the workflow in [.github/workflows/deploy-pages.yml](.github/workflows/deploy-pages.yml).
 
+## Install as a desktop app (PWA)
+
+FocusForge now supports Progressive Web App (PWA) installation. This allows the web app to be installed on desktop and mobile and run in a standalone window just like a native app.
+
+How to install:
+
+- Serve the project (or deploy to GitHub Pages) and open the app URL in a modern browser (Chrome, Edge, or Brave recommended).
+- On desktop in Chrome/Edge you should see an install icon in the address bar or in the browser menu. Choose "Install" to add FocusForge to your applications.
+- Alternatively, use the "Install App" button in the app's sidebar if the browser supports the beforeinstallprompt flow.
+
+Notes:
+- The app includes a small service worker for offline loading and faster repeat visits.
+- To update the installed app, redeploy — the service worker will refresh cached assets when the site activates a new version.
+
+## Package as a native desktop app (optional)
+
+If a native installer is preferred (Windows/macOS/Linux), FocusForge can be packaged using Electron or Tauri. Recommended steps (Electron):
+
+1. Create a simple Electron wrapper that loads the local production build or remote URL.
+2. Add packaging tools like electron-builder to produce installers for each platform.
+
+If you want, I can add an Electron scaffold and packaging configuration next — tell me which platform(s) you want to target and I will create the necessary files.
+
 ## Design Philosophy
 
 FocusForge emphasizes:

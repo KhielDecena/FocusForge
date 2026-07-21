@@ -6,6 +6,13 @@
 <title>FocusForge — Build Discipline. Eliminate Distractions.</title>
 <meta name="description" content="FocusForge: a premium, offline productivity app for focus, habits, and discipline." />
 
+<!-- PWA manifest and theme -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#07111f">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="apple-touch-icon" href="assets/images/logo.svg">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 
@@ -38,9 +45,12 @@
 
   <div class="sidebar-footer">
     <div class="mini-plant" id="sidebar-plant" title="Your focus plant"></div>
-    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
-      <span id="theme-icon">☾</span>
-    </button>
+    <div style="display:flex;gap:8px;align-items:center">
+      <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+        <span id="theme-icon">☾</span>
+      </button>
+      <button id="install-btn" class="btn btn-ghost" style="display:none">Install App</button>
+    </div>
   </div>
 </nav>
 
@@ -406,5 +416,41 @@
 <script src="assets/js/profile.js"></script>
 <script src="assets/js/dashboard.js"></script>
 <script src="assets/js/app.js"></script>
+
+<script>
+// Register service worker and handle PWA install prompt
+(function(){
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js').then(() => console.log('Service worker registered')).catch(e=>console.warn('SW registration failed',e));
+  }
+
+  let deferredPrompt = null;
+  const installBtn = document.getElementById('install-btn');
+
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    if (installBtn) { installBtn.style.display = 'inline-flex'; }
+  });
+
+  if (installBtn) {
+    installBtn.addEventListener('click', async () => {
+      if (!deferredPrompt) return;
+      deferredPrompt.prompt();
+      const choice = await deferredPrompt.userChoice;
+      if (choice && choice.outcome) console.log('User choice', choice.outcome);
+      deferredPrompt = null;
+      installBtn.style.display = 'none';
+    });
+  }
+
+  // Optional: show install instructions for unsupported browsers
+  window.addEventListener('appinstalled', () => {
+    console.log('App installed');
+    if (installBtn) installBtn.style.display = 'none';
+  });
+})();
+</script>
+
 </body>
 </html>

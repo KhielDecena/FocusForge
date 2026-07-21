@@ -1,0 +1,13 @@
+{
+  "name": "FocusForge",
+  "short_name": "FocusForge",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#07111f",
+  "theme_color": "#07111f",
+  "description": "FocusForge — Build Discipline. Eliminate Distractions.",
+  "icons": [
+    { "src": "assets/images/logo.svg", "sizes": "128x128", "type": "image/svg+xml" },
+    { "src": "assets/images/logo.svg", "sizes": "512x512", "type": "image/svg+xml" }
+  ]
+}
