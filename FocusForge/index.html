@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>FocusForge — Build Discipline. Eliminate Distractions.</title>
+<meta name="description" content="FocusForge: a premium, offline productivity app for focus, habits, and discipline." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="assets/css/animations.css">
+<link rel="stylesheet" href="assets/css/responsive.css">
+</head>
+<body>
+<div class="scroll-progress" id="scroll-progress" aria-hidden="true"></div>
+<div id="xp-toast-layer" class="toast-layer" aria-live="polite"></div>
+<div id="confetti-layer" class="confetti-layer" aria-hidden="true"></div>
+
+<!-- SIDEBAR -->
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-brand">
+    <span class="brand-mark">⌁</span>
+    <span class="brand-text">FocusForge</span>
+  </div>
+
+  <ul class="nav-list">
+    <li><button class="nav-item is-active" data-view="dashboard"><span class="nav-ico">◆</span>Dashboard</button></li>
+    <li><button class="nav-item" data-view="focus"><span class="nav-ico">◎</span>Focus Mode</button></li>
+    <li><button class="nav-item" data-view="tasks"><span class="nav-ico">▤</span>Tasks</button></li>
+    <li><button class="nav-item" data-view="habits"><span class="nav-ico">✚</span>Habits</button></li>
+    <li><button class="nav-item" data-view="statistics"><span class="nav-ico">▦</span>Statistics</button></li>
+    <li><button class="nav-item" data-view="calendar"><span class="nav-ico">▧</span>Calendar</button></li>
+    <li><button class="nav-item" data-view="braindump"><span class="nav-ico">✎</span>Brain Dump</button></li>
+    <li><button class="nav-item" data-view="achievements"><span class="nav-ico">✦</span>Achievements</button></li>
+  </ul>
+
+  <div class="sidebar-footer">
+    <div class="mini-plant" id="sidebar-plant" title="Your focus plant"></div>
+    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+      <span id="theme-icon">☾</span>
+    </button>
+  </div>
+</nav>
+
+<button class="mobile-nav-toggle" id="mobile-nav-toggle" aria-label="Open menu">☰</button>
+
+<!-- MAIN -->
+<main class="app-main">
+   <div class="search-shell">
+     <div class="search-box">
+       <span class="search-icon">⌕</span>
+       <input type="text" id="global-search-input" placeholder="Search tasks, habits, notes, goals, journal, achievements, projects, and ideas" />
+     </div>
+     <div class="search-results card" id="search-results" hidden></div>
+   </div>
+
+   <div class="profile-modal" id="profile-modal" aria-hidden="true">
+   <div class="profile-modal-card card">
+     <div class="profile-modal-header">
+       <div>
+         <h3>Welcome to FocusForge</h3>
+         <p class="subtle">Tell us a little about yourself so your workspace feels personal.</p>
+       </div>
+       <button class="btn btn-ghost" type="button" id="profile-close" aria-label="Close">✕</button>
+     </div>
+     <form class="profile-form" id="profile-form">
+       <label class="profile-field">
+         <span>Name</span>
+         <input type="text" id="profile-name" name="profileName" placeholder="Alex" required />
+       </label>
+       <label class="profile-field">
+         <span>Main goal</span>
+         <select id="profile-goal" name="profileGoal">
+           <option value="Build discipline">Build discipline</option>
+           <option value="Study smarter">Study smarter</option>
+           <option value="Improve fitness">Improve fitness</option>
+           <option value="Grow my career">Grow my career</option>
+           <option value="Create calm">Create calm</option>
+         </select>
+       </label>
+       <label class="profile-field">
+         <span>Preferred focus style</span>
+         <select id="profile-focus-style" name="profileFocusStyle">
+           <option value="Deep work">Deep work</option>
+           <option value="Balanced">Balanced</option>
+           <option value="Flexible">Flexible</option>
+         </select>
+       </label>
+       <label class="profile-field">
+         <span>Daily target</span>
+         <input type="text" id="profile-daily-target" name="profileDailyTarget" placeholder="2 focus sessions" />
+       </label>
+       <div class="profile-actions">
+         <button class="btn btn-ghost" type="button" id="profile-skip">Skip for now</button>
+         <button class="btn btn-primary" type="submit">Save and continue</button>
+       </div>
+     </form>
+   </div>
+   </div>
+  
+   <!-- DASHBOARD VIEW -->
+  <section class="view is-active" id="view-dashboard" data-view="dashboard">
+    <header class="view-header">
+      <div>
+        <h1 id="greeting-text">Good Morning</h1>
+        <p class="subtle" id="quote-of-day">Loading your quote…</p>
+      </div>
+      <div class="view-header-actions">
+        <button class="btn btn-ghost btn-small" type="button" id="profile-edit-btn">Customize</button>
+        <div class="clock-card">
+          <div class="clock-time mono" id="live-clock">00:00:00</div>
+          <div class="clock-date" id="live-date">—</div>
+        </div>
+      </div>
+    </header>
+
+    <div class="stat-strip">
+      <div class="stat-pill">
+        <span class="stat-label">Level</span>
+        <span class="stat-value mono" id="stat-level">1</span>
+      </div>
+      <div class="stat-pill">
+        <span class="stat-label">XP</span>
+        <span class="stat-value mono" id="stat-xp">0</span>
+      </div>
+      <div class="stat-pill">
+        <span class="stat-label">Streak</span>
+        <span class="stat-value mono" id="stat-streak">0d</span>
+      </div>
+      <div class="stat-pill">
+        <span class="stat-label">Focus Score</span>
+        <span class="stat-value mono" id="stat-focus-score">0%</span>
+      </div>
+    </div>
+
+    <div class="hero-card card">
+      <div class="hero-copy">
+        <span class="hero-pill" id="momentum-pill">Momentum ready</span>
+        <h2 id="momentum-title">A calmer, sharper day starts here.</h2>
+        <p id="momentum-text">You’re building strong habits one focused session at a time.</p>
+        <div class="hero-actions">
+          <button class="btn btn-primary" id="hero-start-focus">Start Focus Session</button>
+          <button class="btn btn-ghost" id="hero-open-tasks">Review Tasks</button>
+        </div>
+      </div>
+      <div class="hero-visual" aria-hidden="true">
+        <div class="orb orb-a"></div>
+        <div class="orb orb-b"></div>
+        <div class="pulse-ring"></div>
+      </div>
+    </div>
+
+    <div class="dashboard-grid">
+      <div class="card mission-card">
+        <h3 class="card-title">Today's Mission</h3>
+        <p class="mission-task" id="mission-task">No tasks yet — add your Top 3.</p>
+        <button class="btn btn-primary" id="mission-start-focus">Start Focus Session</button>
+      </div>
+
+      <div class="card ring-card">
+        <h3 class="card-title">Daily Progress</h3>
+        <div class="ring-wrap">
+          <svg class="progress-ring" width="140" height="140" viewBox="0 0 140 140">
+            <circle class="ring-bg" cx="70" cy="70" r="60"></circle>
+            <circle class="ring-fg" id="dash-ring" cx="70" cy="70" r="60"></circle>
+          </svg>
+          <div class="ring-center">
+            <span class="mono" id="ring-percent">0%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card level-card">
+        <h3 class="card-title">Level Progress</h3>
+        <div class="level-badge" id="level-badge">Lv 1</div>
+        <div class="xp-bar"><div class="xp-bar-fill" id="dash-xp-fill"></div></div>
+        <p class="subtle small" id="dash-xp-text">0 / 100 XP</p>
+      </div>
+
+      <div class="card plant-card">
+        <h3 class="card-title">Focus Plant</h3>
+        <div class="plant-scene" id="plant-scene">
+          <div class="plant-pot"></div>
+          <div class="plant-stem" id="plant-stem"></div>
+        </div>
+        <p class="subtle small" id="plant-status">Your plant reflects your consistency.</p>
+      </div>
+
+      <div class="card challenge-card">
+        <h3 class="card-title">Daily Challenge</h3>
+        <p id="challenge-text">Loading challenge…</p>
+        <div class="challenge-footer">
+          <span class="tag tag-accent" id="challenge-reward">+25 XP</span>
+          <button class="btn btn-ghost" id="challenge-check">Mark Complete</button>
+        </div>
+      </div>
+
+      <div class="card top3-card">
+        <h3 class="card-title">Daily Top 3</h3>
+        <ul class="top3-list" id="top3-list"></ul>
+        <button class="btn btn-ghost" id="top3-manage">Manage in Tasks</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOCUS VIEW -->
+  <section class="view" id="view-focus" data-view="focus">
+    <header class="view-header"><div><h1>Focus Mode</h1><p class="subtle">Pick a duration and eliminate distractions.</p></div></header>
+
+    <div class="focus-setup card">
+      <div class="preset-row">
+        <button class="preset-btn" data-mins="25">25 min</button>
+        <button class="preset-btn" data-mins="50">50 min</button>
+        <button class="preset-btn" data-mins="90">90 min</button>
+        <div class="custom-preset">
+          <input type="number" id="custom-mins" min="1" max="240" placeholder="Custom" />
+          <span class="subtle small">min</span>
+        </div>
+      </div>
+      <div class="focus-task-picker">
+        <label class="subtle small" for="focus-task-select">Task for this session</label>
+        <select id="focus-task-select"></select>
+      </div>
+      <button class="btn btn-primary btn-lg" id="begin-focus-btn">Begin Focus Session</button>
+    </div>
+  </section>
+
+  <!-- TASKS VIEW -->
+  <section class="view" id="view-tasks" data-view="tasks">
+    <header class="view-header"><div><h1>Tasks</h1><p class="subtle">Add, organize, and complete your work.</p></div></header>
+
+    <form class="task-form card" id="task-form">
+      <input type="text" id="task-input" placeholder="What needs to get done?" required />
+      <select id="task-category">
+        <option value="Study">Study</option>
+        <option value="Programming">Programming</option>
+        <option value="Exercise">Exercise</option>
+        <option value="Personal">Personal</option>
+        <option value="Work">Work</option>
+      </select>
+      <label class="top3-check"><input type="checkbox" id="task-top3" /> Top 3</label>
+      <button type="submit" class="btn btn-primary">Add Task</button>
+    </form>
+
+    <div class="filter-row" id="task-filters">
+      <button class="filter-chip is-active" data-filter="All">All</button>
+      <button class="filter-chip" data-filter="Study">Study</button>
+      <button class="filter-chip" data-filter="Programming">Programming</button>
+      <button class="filter-chip" data-filter="Exercise">Exercise</button>
+      <button class="filter-chip" data-filter="Personal">Personal</button>
+      <button class="filter-chip" data-filter="Work">Work</button>
+    </div>
+
+    <ul class="task-list" id="task-list"></ul>
+  </section>
+
+  <!-- HABITS VIEW -->
+  <section class="view" id="view-habits" data-view="habits">
+    <header class="view-header">
+      <div>
+        <h1>Habits</h1>
+        <p class="subtle">Track consistent progress with frequency-aware routines.</p>
+      </div>
+    </header>
+
+    <form class="card habit-form" id="habit-form">
+      <div class="habit-form-grid">
+        <input type="text" id="habit-name" placeholder="Habit name" required />
+        <input type="text" id="habit-icon" placeholder="Icon (✨)" />
+        <select id="habit-frequency">
+          <option value="daily">Daily</option>
+          <option value="weekly">Weekly</option>
+          <option value="monthly">Monthly</option>
+          <option value="custom">Custom</option>
+        </select>
+        <input type="number" id="habit-target" min="1" max="10" value="1" />
+        <div class="habit-custom-field" id="habit-custom-field">
+          <label class="subtle small" for="habit-custom-interval">Every N days</label>
+          <input type="number" id="habit-custom-interval" min="1" max="90" value="3" />
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary">Add Habit</button>
+    </form>
+
+    <div class="card habit-summary" id="habit-summary"></div>
+    <div class="habit-grid" id="habit-grid"></div>
+  </section>
+
+  <!-- STATISTICS VIEW -->
+  <section class="view" id="view-statistics" data-view="statistics">
+    <header class="view-header"><div><h1>Statistics</h1><p class="subtle">Your productivity, measured.</p></div></header>
+
+    <div class="stat-strip">
+      <div class="stat-pill"><span class="stat-label">Hours Studied</span><span class="stat-value mono" id="s-hours">0</span></div>
+      <div class="stat-pill"><span class="stat-label">Focus Sessions</span><span class="stat-value mono" id="s-sessions">0</span></div>
+      <div class="stat-pill"><span class="stat-label">Tasks Completed</span><span class="stat-value mono" id="s-tasks">0</span></div>
+      <div class="stat-pill"><span class="stat-label">Current Streak</span><span class="stat-value mono" id="s-streak">0</span></div>
+      <div class="stat-pill"><span class="stat-label">Longest Streak</span><span class="stat-value mono" id="s-longest">0</span></div>
+      <div class="stat-pill"><span class="stat-label">Total XP</span><span class="stat-value mono" id="s-xp">0</span></div>
+    </div>
+
+    <div class="chart-grid">
+      <div class="card">
+        <h3 class="card-title">This Week</h3>
+        <canvas id="chart-weekly" width="480" height="220"></canvas>
+      </div>
+      <div class="card">
+        <h3 class="card-title">This Month</h3>
+        <canvas id="chart-monthly" width="480" height="220"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <!-- CALENDAR VIEW -->
+  <section class="view" id="view-calendar" data-view="calendar">
+    <header class="view-header">
+      <div><h1>Calendar</h1><p class="subtle">Your daily productivity heatmap.</p></div>
+      <div class="cal-nav">
+        <button class="btn btn-ghost" id="cal-prev">‹</button>
+        <span class="mono" id="cal-month-label">—</span>
+        <button class="btn btn-ghost" id="cal-next">›</button>
+      </div>
+    </header>
+    <div class="card">
+      <div class="cal-weekdays">
+        <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
+      </div>
+      <div class="cal-grid" id="cal-grid"></div>
+      <div class="cal-legend">
+        <span><i class="dot dot-none"></i>None</span>
+        <span><i class="dot dot-low"></i>Low</span>
+        <span><i class="dot dot-mid"></i>Moderate</span>
+        <span><i class="dot dot-high"></i>High</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- BRAIN DUMP VIEW -->
+  <section class="view" id="view-braindump" data-view="braindump">
+    <header class="view-header"><div><h1>Brain Dump</h1><p class="subtle">Capture the thought, then get back to focus.</p></div></header>
+    <form class="braindump-form card" id="braindump-form">
+      <textarea id="braindump-input" placeholder="I need to watch that video later…" rows="3" required></textarea>
+      <button type="submit" class="btn btn-primary">Save to Idea Box</button>
+    </form>
+    <h3 class="card-title" style="margin:24px 0 12px;">Idea Box</h3>
+    <ul class="idea-list" id="idea-list"></ul>
+  </section>
+
+  <!-- ACHIEVEMENTS VIEW -->
+  <section class="view" id="view-achievements" data-view="achievements">
+    <header class="view-header"><div><h1>Achievements</h1><p class="subtle">Milestones on your discipline journey.</p></div></header>
+    <div class="achievement-grid" id="achievement-grid"></div>
+  </section>
+
+</main>
+
+<!-- FOCUS MODE OVERLAY -->
+<div class="focus-overlay" id="focus-overlay">
+  <div class="focus-overlay-inner">
+    <p class="focus-label">FOCUS MODE</p>
+    <p class="focus-current-task" id="overlay-task">—</p>
+    <div class="overlay-ring-wrap">
+      <svg class="progress-ring big" width="260" height="260" viewBox="0 0 260 260">
+        <circle class="ring-bg" cx="130" cy="130" r="115"></circle>
+        <circle class="ring-fg" id="overlay-ring" cx="130" cy="130" r="115"></circle>
+      </svg>
+      <div class="overlay-time mono" id="overlay-time">25:00</div>
+    </div>
+    <p class="focus-motivation" id="overlay-motivation">Stay with it. One session at a time.</p>
+
+    <div class="sound-row" id="sound-row">
+      <button class="sound-btn" data-sound="rain">🌧 Rain</button>
+      <button class="sound-btn" data-sound="cafe">☕ Café</button>
+      <button class="sound-btn" data-sound="fireplace">🔥 Fireplace</button>
+      <button class="sound-btn" data-sound="ocean">🌊 Ocean</button>
+      <button class="sound-btn" data-sound="night">🌙 Night</button>
+      <input type="range" id="sound-volume" min="0" max="100" value="50" />
+    </div>
+
+    <div class="overlay-controls">
+      <button class="btn btn-ghost" id="overlay-pause">Pause</button>
+      <button class="btn btn-danger" id="overlay-end">End Session</button>
+    </div>
+  </div>
+</div>
+
+<script src="assets/js/storage.js"></script>
+<script src="assets/js/theme.js"></script>
+<script src="assets/js/xp.js"></script>
+<script src="assets/js/achievements.js"></script>
+<script src="assets/js/tasks.js"></script>
+<script src="assets/js/habits.js"></script>
+<script src="assets/js/sounds.js"></script>
+<script src="assets/js/focus.js"></script>
+<script src="assets/js/statistics.js"></script>
+<script src="assets/js/calendar.js"></script>
+<script src="assets/js/brainDump.js"></script>
+<script src="assets/js/plant.js"></script>
+<script src="assets/js/search.js"></script>
+<script src="assets/js/profile.js"></script>
+<script src="assets/js/dashboard.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>

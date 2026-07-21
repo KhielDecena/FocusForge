@@ -1,0 +1,119 @@
+/* animations.css — all keyframes and motion-driven effects */
+
+@keyframes viewFadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes xpFloat {
+  0% { opacity: 0; transform: translate(-50%, -40%) scale(0.8); }
+  15% { opacity: 1; transform: translate(-50%, -55%) scale(1.05); }
+  80% { opacity: 1; transform: translate(-50%, -90%) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -110%) scale(0.95); }
+}
+
+@keyframes confettiFall {
+  0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(100vh) rotate(540deg); opacity: 0; }
+}
+
+@keyframes popIn {
+  0% { transform: scale(0.85); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 0 0 var(--accent-dim); }
+  50% { box-shadow: 0 0 0 8px transparent; }
+}
+
+@keyframes floatPulse {
+  0%, 100% { transform: translateY(0px) scale(1); }
+  50% { transform: translateY(-8px) scale(1.03); }
+}
+
+@keyframes rotateRing {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* card hover */
+.card {
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+.stat-pill:hover, .habit-card:hover, .achievement-card.is-unlocked:hover, .task-item:hover, .hero-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent);
+}
+
+/* achievement unlock pop */
+.achievement-card.is-unlocked { animation: popIn 0.4s ease; }
+
+/* toast/level-up emphasis */
+.toast-levelup { animation: popIn 0.3s ease; }
+
+/* ripple on primary buttons */
+.btn { position: relative; overflow: hidden; }
+.btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, rgba(255,255,255,0.35) 0%, transparent 60%);
+  opacity: 0;
+  transform: scale(0.4);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+.btn:active::after { opacity: 1; transform: scale(1.4); transition: none; }
+
+/* focus overlay entrance */
+.focus-overlay.is-active .focus-overlay-inner { animation: popIn 0.4s ease; }
+
+/* today's calendar cell pulse */
+.cal-cell.cal-today { animation: pulseGlow 2.4s ease-in-out infinite; }
+
+/* number counters on stat values */
+.stat-value, .clock-time { transition: color 0.3s ease; }
+
+/* ---------- Virtual plant growth stages (pure CSS, no images) ---------- */
+
+.plant-stem { left: 50%; margin-left: -3px; }
+
+.plant-stem.stage-0 { height: 10px; background: #5a4632; }
+.plant-stem.stage-0::before, .plant-stem.stage-0::after { display: none; }
+
+.plant-stem.stage-1 { height: 16px; }
+.plant-stem.stage-1::before { width: 10px; height: 8px; left: -8px; top: -4px; }
+
+.plant-stem.stage-2 { height: 34px; }
+.plant-stem.stage-2::before { width: 16px; height: 12px; left: -14px; top: -2px; }
+.plant-stem.stage-2::after { width: 16px; height: 12px; right: -14px; top: 6px; transform: scaleX(-1); }
+
+.plant-stem.stage-3 { height: 54px; }
+.plant-stem.stage-3::before { width: 20px; height: 16px; left: -18px; top: 0px; }
+.plant-stem.stage-3::after { width: 20px; height: 16px; right: -18px; top: 14px; transform: scaleX(-1); }
+
+.plant-stem.stage-4 { height: 74px; background: #2f4a34; }
+.plant-stem.stage-4::before { width: 24px; height: 20px; left: -22px; top: 4px; background: #34d058; }
+.plant-stem.stage-4::after { width: 24px; height: 20px; right: -22px; top: 22px; transform: scaleX(-1); background: #34d058; }
+
+.plant-stem.stage-5 { height: 90px; background: #2f4a34; }
+.plant-stem.stage-5::before { width: 26px; height: 22px; left: -24px; top: 2px; background: #3ee06a; box-shadow: 0 0 12px #22C55E88; }
+.plant-stem.stage-5::after { width: 26px; height: 22px; right: -24px; top: 24px; transform: scaleX(-1); background: #3ee06a; box-shadow: 0 0 12px #22C55E88; }
+.plant-stem.stage-5::before { animation: pulseGlow 2s ease-in-out infinite; }
+
+/* mini sidebar plant reflects same stages, scaled down */
+.mini-plant.stage-0 { background: #5a463222; border-color: #5a4632; }
+.mini-plant.stage-1 { background: #22C55E11; }
+.mini-plant.stage-2 { background: #22C55E22; }
+.mini-plant.stage-3 { background: #22C55E33; border-color: var(--success); }
+.mini-plant.stage-4 { background: #22C55E44; border-color: var(--success); }
+.mini-plant.stage-5 { background: #22C55E55; border-color: var(--success); box-shadow: 0 0 10px #22C55E66; }
+
+/* reduced motion respect */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
